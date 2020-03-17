@@ -1,0 +1,36 @@
+body {
+	overflow: hidden;
+	background-color: black;
+	font-size: 30pt;
+	font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif, monospace;
+	align-content: center;
+	align-items: center;
+}
+
+.text {
+	background-color: black;
+	color: white;
+	border-width: 0px;
+	font-size: 30pt;
+}
+
+.text:focus {
+	outline: 0px;
+}
+
+.container {
+	border-width: 5px;
+	border-color: white;
+	color: white;
+	text-align: center;
+}
+
+#prompt {
+	position: absolute;
+	bottom: 0;
+}
+
+#piechart {
+	opacity: 0;
+}
+
