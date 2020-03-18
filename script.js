@@ -1,15 +1,14 @@
 var pop = Math.round(Math.floor(Math.random() * 500000) + 100000);
 var percent = Math.round((Math.floor(Math.random() * 10) + 4));
-var inf = (percent / 100) * pop;
-console.log(percent + '%')
-day = 0
+var inf = Math.round((percent / 100) * pop);
+var infRate = 1000; // people infected per day
+day = 1
+
+var popularity = 85;
+
 function wait() {
 	console.log("waited");
 }
-
-
-
-console.log(pop, inf)
 
 document.getElementById("prompt") // listen for the enter key
     .addEventListener("keyup", function(event) {
@@ -19,15 +18,28 @@ if (event.keyCode === 13) {
     }
 })
 
-function sendCommand() {
-	command = (document.getElementById("prompt").value);
-	document.getElementById("prompt").value = '';
-}
-
 
 // Load google charts
 google.charts.load('current', {'packages':['corechart']});
+google.charts.load('current', {'packages':['gauge']});
 google.charts.setOnLoadCallback(drawChart);
+
+function getRandom(input) {
+
+  prob = input / 50 // gives the player a chance of being voted out only if their popularity is less than 50%
+  random = Math.random();
+	// console.log(random, " ", prob)
+  if (random > prob) {
+    return 1;
+  } else {
+    return 0;
+  }
+
+}
+
+output = getRandom(popularity);
+console.log(output)
+
 
 // Draw the chart and set the chart values
 function drawChart() {
@@ -40,12 +52,28 @@ function drawChart() {
   var chart = new google.visualization.PieChart(document.getElementById('piechart'));
   chart.draw(data, {
 		legend: 'none',
-		width: 600,
-		height: 600,
+		width: 440,
+		height: 440,
 		colors: ['red', 'green'],
 		backgroundColor: '#000000',
 		is3d: true
 	});
+	// draw gauge
+	var data = google.visualization.arrayToDataTable([
+		['Label', 'Value'],
+		['Popularity', popularity],
+	]);
+
+	var options = {
+		width: 320, height: 320,
+		redFrom: 0, redTo: 10,
+		yellowFrom: 10, yellowTo: 45,
+		greenFrom: 45, greenTo: 100,
+		minorTicks: 5
+	};
+	var chart = new google.visualization.Gauge(document.getElementById('chart_div'));
+	chart.draw(data, options);
+	console.log("redrew all charts");
 }
 
 var i = 0;
@@ -59,16 +87,75 @@ function typeWriter() { // typing effect
   } else {
 		setTimeout(function() {
 			document.getElementById("piechart").style.opacity = 1;
-			document.getElementById("typing").innerHTML = ('Day '+ day.toString());
-			game();
+			document.getElementById("chart_div").style.opacity = 1;
+			setTimeout(function() {
+				document.getElementById("typing").innerHTML = "You are appointed as the head of the World Health Organization."
+			}, 5000);
+			setTimeout(function() {
+				document.getElementById("typing").innerHTML = "A new virus is on the horizon, called COVID-19."
+			}, 10000);
+			setTimeout(function() {
+				document.getElementById("typing").innerHTML = "It affects the respiratory system and is highly contagious."
+			}, 15000);
+			setTimeout(function() {
+				document.getElementById("typing").innerHTML = "You can command health officials to enforce any law..."
+			}, 20000);
+			setTimeout(function() {
+				document.getElementById("typing").innerHTML = "Simply by typing it. Use this power wisely,"
+			}, 25000);
+			setTimeout(function() {
+				document.getElementById("typing").innerHTML = "As you can be voted out of office at any point."
+			}, 30000);
+			setTimeout(function() {
+				document.getElementById("typing").innerHTML = ('Day '+ day.toString()+" - people infected per day: "+ infRate.toString());
+			}, 35000);
 		}, 1000);
 		
 	}
 }
 
-function game() { // main game loop, interpreting commands and changing infection rates
-
-}
-
 typeWriter();
 
+var commandsused = []; // logs all commands that have been entered
+
+function reset() {
+	document.getElementById("typing").innerHTML = ('Day '+ day.toString()+" - people infected per day: "+ infRate.toString());
+}
+
+function display(message, command) {
+	document.getElementById("typing").innerHTML = message;
+	
+	commandsused.push(command);
+	// console.log(commandsused);
+	setTimeout(reset, 5000);
+	console.log("pop ", popularity);
+	drawChart();
+}
+
+
+function sendCommand() {
+	command = (document.getElementById("prompt").value);
+	document.getElementById("prompt").value = '';
+	if (Math.random() > 0.8) { // advances the day by 1 every so often
+		day += 1;
+		console.log("begin day ", day);
+		inf += infRate;
+	}
+	if (infRate < 5) {
+		console.log("game won");
+		window.location.href = 'won.html'; // wins the game
+	}
+	console.log(commandsused);
+	console log(command in commandsused);
+	if (command in commandsused) {
+		display("you already said to do that, silly!");
+	} else if (command == "wash hands") {
+		display("Washing hands once an hour is now law in 44 countries.", "wash hands");
+		popularity += 5;
+		infRate -= 100;
+	} else if (command == "ban restaurants") {
+		display("Restaurants are shuttered across the globe. Their owners are not too happy.", "ban restaurants");
+		popularity -= 5;
+		infRate -= 350;
+	}
+}

@@ -8,13 +8,19 @@
 		<link href="terminal.png" rel="icon">
   </head>
   <body>
-		<div class="container">
+		<div id="heading">
 			<p id="typing"></p>
-			<small id="info"></small>
-			<div id="piechart" align="middle">
-			</div>
 		</div>
-		<input type="text" class="text" id="prompt" placeholder=">" autofocus autocomplete="off">
+		<div class="container">
+			
+			<small id="info"></small>
+			<div id="piechart" align="middle"></div>
+			<div id="chart_div" style="width: 400px; height: 120px;"></div>
+		</div>
+		<div id="prompt_div">
+			<h1 id=">">></h1>
+			<input type="text" class="text" id="prompt" autofocus autocomplete="off">
+		</div>
 		<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script src="script.js" defer></script>
   </body>

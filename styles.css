@@ -1,10 +1,15 @@
 body {
-	overflow: hidden;
+	/* overflow: hidden; */
 	background-color: black;
 	font-size: 30pt;
 	font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif, monospace;
 	align-content: center;
 	align-items: center;
+	color: white;
+}
+
+#heading {
+	text-align: center;
 }
 
 .text {
@@ -23,14 +28,43 @@ body {
 	border-color: white;
 	color: white;
 	text-align: center;
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	grid-template-rows: 1fr;
+	grid-column-gap: 0px;
+	grid-row-gap: 0px; 
+	justify-items: center;
+}
+
+#prompt_div {
+	position: absolute;
+	bottom: 0;
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	grid-template-rows: 1fr;
+	grid-column-gap: 0px;
+	grid-row-gap: 0px; 
+}
+
+#\> {
+	grid-area: 1 / 1 / 2 / 2;
 }
 
 #prompt {
-	position: absolute;
-	bottom: 0;
+	padding-left: 50px;
+	background-color: #ffffff00;
+	font-size: 50px;
+	grid-area: 1 / 1 / 2 / 2;
 }
 
-#piechart {
+#piechart,
+#chart_div {
 	opacity: 0;
 }
-
+#piechart {
+	grid-area: 1 / 1 / 2 / 2;
+}
+#chart_div {
+	grid-area: 1 / 2 / 2 / 3;
+	padding: 60px;
+} 
