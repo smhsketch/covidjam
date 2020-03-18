@@ -1,7 +1,7 @@
-var pop = Math.round(Math.floor(Math.random() * 500000) + 100000);
+var pop = Math.round(Math.floor(Math.random() * 50000) + 100000);
 var percent = Math.round((Math.floor(Math.random() * 10) + 4));
 var inf = Math.round((percent / 100) * pop);
-var infRate = 1000; // people infected per day
+var infRate = 10000; // people infected per day
 day = 1
 
 var popularity = 85;
@@ -25,7 +25,6 @@ google.charts.load('current', {'packages':['gauge']});
 google.charts.setOnLoadCallback(drawChart);
 
 function getRandom(input) {
-
   prob = input / 50 // gives the player a chance of being voted out only if their popularity is less than 50%
   random = Math.random();
 	// console.log(random, " ", prob)
@@ -34,11 +33,8 @@ function getRandom(input) {
   } else {
     return 0;
   }
-
 }
 
-output = getRandom(popularity);
-console.log(output)
 
 
 // Draw the chart and set the chart values
@@ -66,9 +62,9 @@ function drawChart() {
 
 	var options = {
 		width: 320, height: 320,
-		redFrom: 0, redTo: 10,
-		yellowFrom: 10, yellowTo: 45,
-		greenFrom: 45, greenTo: 100,
+		redFrom: 0, redTo: 25,
+		yellowFrom: 25, yellowTo: 60,
+		greenFrom: 60, greenTo: 100,
 		minorTicks: 5
 	};
 	var chart = new google.visualization.Gauge(document.getElementById('chart_div'));
@@ -129,25 +125,28 @@ function display(message, command) {
 	// console.log(commandsused);
 	setTimeout(reset, 5000);
 	console.log("pop ", popularity);
-	drawChart();
+	
 }
 
 
 function sendCommand() {
 	command = (document.getElementById("prompt").value);
 	document.getElementById("prompt").value = '';
-	if (Math.random() > 0.8) { // advances the day by 1 every so often
+	if (Math.random() > 0.5) { // advances the day by 1 every so often
 		day += 1;
 		console.log("begin day ", day);
 		inf += infRate;
+		prob = popularity / 50 // gives the player a chance of being voted out only if their popularity is less than 50%
+		if (Math.random()*3 > prob*2 || pop - inf == 0) {
+			window.location.href = "lost.html";
+		}
 	}
 	if (infRate < 5) {
 		console.log("game won");
 		window.location.href = 'won.html'; // wins the game
 	}
-	console.log(commandsused);
-	console log(command in commandsused);
-	if (command in commandsused) {
+
+	if (commandsused.includes(command)) {
 		display("you already said to do that, silly!");
 	} else if (command == "wash hands") {
 		display("Washing hands once an hour is now law in 44 countries.", "wash hands");
@@ -155,7 +154,21 @@ function sendCommand() {
 		infRate -= 100;
 	} else if (command == "ban restaurants") {
 		display("Restaurants are shuttered across the globe. Their owners are not too happy.", "ban restaurants");
+		popularity -= 10;
+		infRate -= 750;
+	} else if (command == "ban gatherings") {
+		display("All over the world, congregations of more than 15 people are outlawed. Hosts of parties are disappointed.", "ban gatherings");
 		popularity -= 5;
-		infRate -= 350;
+		infRate -= 400;
+	} else if (command == "close school" || command == "cancel school") {
+		display("Schools are now restricted to online learning. Kids are overjoyed, but parents are not thrilled.", "cancel school");
+		popularity -= 20;
+		infRate -= 1000;
+	} else if (command == "cancel work") {
+		display("Working away from home has been banned worldwide, and paid leave is required. Everyone is ecstatic, except for employers.", "cancel work");
+		popularity += 20;
+		infRate -= 5000;
 	}
+	console.log(commandsused);
+	drawChart();
 }
