@@ -1,0 +1,19 @@
+body {
+	text-align: center;
+	background-color: black;
+	font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+h1 {
+	color: red;
+	font-size: 90pt;
+}
+
+h3 {
+	color: white;
+	font-size: 25pt;
+}
+
+ul {
+	color: white;
+}

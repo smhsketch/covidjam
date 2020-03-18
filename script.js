@@ -6,6 +6,13 @@ day = 1
 
 var popularity = 85;
 
+var noise = new Audio("crowdnoise.mp3");
+
+function playsound() {
+	noise.play();
+	document.getElementById("button").parentNode.removeChild(document.getElementById("button"));
+}
+
 function wait() {
 	console.log("waited");
 }
@@ -34,8 +41,6 @@ function getRandom(input) {
     return 0;
   }
 }
-
-
 
 // Draw the chart and set the chart values
 function drawChart() {
@@ -100,13 +105,12 @@ function typeWriter() { // typing effect
 				document.getElementById("typing").innerHTML = "Simply by typing it. Use this power wisely,"
 			}, 25000);
 			setTimeout(function() {
-				document.getElementById("typing").innerHTML = "As you can be voted out of office at any point."
+				document.getElementById("typing").innerHTML = "As you can be voted out of office at any point. Type help for help. Good luck."
 			}, 30000);
 			setTimeout(function() {
 				document.getElementById("typing").innerHTML = ('Day '+ day.toString()+" - people infected per day: "+ infRate.toString());
 			}, 35000);
 		}, 1000);
-		
 	}
 }
 
@@ -134,20 +138,26 @@ function sendCommand() {
 	document.getElementById("prompt").value = '';
 	if (Math.random() > 0.5) { // advances the day by 1 every so often
 		day += 1;
+		reset();
 		console.log("begin day ", day);
 		inf += infRate;
-		prob = popularity / 50 // gives the player a chance of being voted out only if their popularity is less than 50%
-		if (Math.random()*3 > prob*2 || pop - inf == 0) {
+		prob = popularity / 80 // gives the player a chance of being voted out only if their popularity is less than 50%
+		if (Math.random() > prob) { // loses the game if they get voted out
 			window.location.href = "lost.html";
 		}
+	if (pop - inf < 1) {
+		document.getElementById("piechart").style.opacity = 0;
+		window.location.href = "infected.html";
+	}
 	}
 	if (infRate < 5) {
 		console.log("game won");
 		window.location.href = 'won.html'; // wins the game
 	}
-
-	if (commandsused.includes(command)) {
+	if (commandsused.includes(command) && command != "help") { // prevents commands from beings used twice
 		display("you already said to do that, silly!");
+	} else if (command == "help") {
+		window.open('help.html', '_blank');
 	} else if (command == "wash hands") {
 		display("Washing hands once an hour is now law in 44 countries.", "wash hands");
 		popularity += 5;
@@ -164,11 +174,24 @@ function sendCommand() {
 		display("Schools are now restricted to online learning. Kids are overjoyed, but parents are not thrilled.", "cancel school");
 		popularity -= 20;
 		infRate -= 1000;
-	} else if (command == "cancel work") {
+	} else if (command == "close work" || command == "cancel work") {
 		display("Working away from home has been banned worldwide, and paid leave is required. Everyone is ecstatic, except for employers.", "cancel work");
 		popularity += 20;
 		infRate -= 5000;
+	} else if (command == "ban pets") {
+		display("All pets are banned and put in shelters. However, most of them never were able to carry COVID-19 anyway", "ban pets");
+		popularity -= 20;
 	}
 	console.log(commandsused);
-	drawChart();
+	drawChart(); // updates the charts after the values change
 }
+
+// command ideas:
+// wear masks
+// 
+// 
+// 
+// 
+// 
+// 
+// 
