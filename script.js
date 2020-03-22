@@ -38,7 +38,7 @@ function getRandom(input) {
 
 // Draw the chart and set the chart values
 function drawChart() {
-  var data = google.visualization ToDataTable([
+  var data = google.visualization.arrayToDataTable([
   ['Type', 'Number of people'],
 	['Infected', inf],
 	['Healthy', pop - inf],
@@ -54,7 +54,7 @@ function drawChart() {
 		is3d: true
 	});
 	// draw gauge
-	var data = google.visualization ToDataTable([
+	var data = google.visualization.arrayToDataTable([
 		['Label', 'Value'],
 		['Popularity', popularity],
 	]);
