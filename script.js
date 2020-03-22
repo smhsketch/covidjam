@@ -2,8 +2,10 @@ var pop = Math.round(Math.floor(Math.random() * 50000) + 100000);
 var percent = Math.round((Math.floor(Math.random() * 10) + 4));
 var inf = Math.round((percent / 100) * pop);
 var infRate = 10000; // people infected per day
-var day = 1
 var popularity = 85;
+
+var news1 = ["The President of the United States", "The Prime Minister of the UK", "Kim Jong Un", "The President of China", "The Sultan of Oman", "Former President Barack Obama", "Linus Torvalds", "Boris Johnson", "Vladimir Putin", "CEO of China", "Greenland", "El Chapo", "Wyoming"]
+var news2 = ["lives in Zanzibar now", "is diagnosed with COVID-19", "dies", "literally just sits there", "closes their own car door", "bans COVID-19", "bans old people", "closes airports", "digs a mass grave", "has yet to see a case of COVID-19", "literally does not exist anymore", "closes all public buildings"]
 
 function wait() {
 	console.log("waited");
@@ -36,7 +38,7 @@ function getRandom(input) {
 
 // Draw the chart and set the chart values
 function drawChart() {
-  var data = google.visualization.arrayToDataTable([
+  var data = google.visualization ToDataTable([
   ['Type', 'Number of people'],
 	['Infected', inf],
 	['Healthy', pop - inf],
@@ -52,7 +54,7 @@ function drawChart() {
 		is3d: true
 	});
 	// draw gauge
-	var data = google.visualization.arrayToDataTable([
+	var data = google.visualization ToDataTable([
 		['Label', 'Value'],
 		['Popularity', popularity],
 	]);
@@ -130,7 +132,9 @@ function sendCommand() {
 	document.getElementById("prompt").value = '';
 	if (Math.random() > 0.5) { // advances the day by 1 every so often
 		day += 1;
+		// news section
 		reset();
+		display("BREAKING NEWS: "+news1[Math.floor(Math.random * 14)]+" "+news2[Math.floor(Math.random * 14)]);
 		console.log("begin day ", day);
 		inf += infRate;
 	}
@@ -207,11 +211,26 @@ function sendCommand() {
 		display("You deported everyone who was diagnosed. They now live in Antarctica?", "deport")
 		popularity -= 70;
 	} else if (command.includes("hand sanitizer")) {
-		display("Using hands sanitizer is now required every 15 minutes.");
+		display("Using hands sanitizer is now required every 15 minutes.", "hand sanitizer");
 		popularity += 5;
 		infRate -= 500;
-	}
-		else {
+	} else if (command.includes("cancel church") || command.includes("close church")) {
+		display("Church services are cancelled. Some angry old people begin to dislike you.", "cancel church");
+		popularity -= 5;
+		infrate -= 500;
+	} else if (command.includes("close park")) {
+		display("Parks are closed nationwide. This halts the spread of disease, but the people enjoyed going there...", "close parks");
+		popularity -= 20;
+		infrate -= 750;
+	} else if (command.includes("ban cars") || command.includes("ban driving") || command.includes("close roads")) {
+		display("All roads are closed and cars are not allowed to be operated.", "close roads");
+		popularity -= 30;
+		infrate -= 2000;
+	} else if (command.includes("ban virus")) {
+		display("You banned COVID-19 from the world.");
+		popularity = 100;
+		infRate = 0;
+	} else {
 		display("Sorry boss, we can't do that...");
 	}
 	console.log(commandsused);
