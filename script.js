@@ -2,16 +2,8 @@ var pop = Math.round(Math.floor(Math.random() * 50000) + 100000);
 var percent = Math.round((Math.floor(Math.random() * 10) + 4));
 var inf = Math.round((percent / 100) * pop);
 var infRate = 10000; // people infected per day
-day = 1
-
+var day = 1
 var popularity = 85;
-
-var noise = new Audio("crowdnoise.mp3");
-
-function playsound() {
-	noise.play();
-	document.getElementById("button").parentNode.removeChild(document.getElementById("button"));
-}
 
 function wait() {
 	console.log("waited");
@@ -141,14 +133,14 @@ function sendCommand() {
 		reset();
 		console.log("begin day ", day);
 		inf += infRate;
-		prob = popularity / 80 // gives the player a chance of being voted out only if their popularity is less than 50%
-		if (Math.random() > prob) { // loses the game if they get voted out
-			window.location.href = "lost.html";
-		}
+	}
+	prob = popularity / 70 // gives the player a chance of being voted out only if their popularity is less than 50%
+	if (Math.random() > prob) { // loses the game if they get voted out
+		window.location.href = "lost.html";
+	}
 	if (pop - inf < 1) {
 		document.getElementById("piechart").style.opacity = 0;
 		window.location.href = "infected.html";
-	}
 	}
 	if (infRate < 5) {
 		console.log("game won");
@@ -156,38 +148,88 @@ function sendCommand() {
 	}
 	if (commandsused.includes(command) && command != "help") { // prevents commands from beings used twice
 		display("you already said to do that, silly!");
-	} else if (command == "help") {
+	} else if (command.includes("help")) {
 		window.open('help.html', '_blank');
-	} else if (command == "wash hands") {
+	} else if (command.includes("wash hands")) {
 		display("Washing hands once an hour is now law in 44 countries.", "wash hands");
 		popularity += 5;
 		infRate -= 100;
-	} else if (command == "ban restaurants") {
+	} else if (command.includes("ban restaurants")) {
 		display("Restaurants are shuttered across the globe. Their owners are not too happy.", "ban restaurants");
 		popularity -= 10;
 		infRate -= 750;
-	} else if (command == "ban gatherings") {
+	} else if (command.includes("ban gatherings")) {
 		display("All over the world, congregations of more than 15 people are outlawed. Hosts of parties are disappointed.", "ban gatherings");
 		popularity -= 5;
 		infRate -= 400;
-	} else if (command == "close school" || command == "cancel school") {
+	} else if (command.includes("close school") || command.includes("cancel school")) {
 		display("Schools are now restricted to online learning. Kids are overjoyed, but parents are not thrilled.", "cancel school");
 		popularity -= 20;
 		infRate -= 1000;
-	} else if (command == "close work" || command == "cancel work") {
+	} else if (command.includes("close work") || command.includes("cancel work")) {
 		display("Working away from home has been banned worldwide, and paid leave is required. Everyone is ecstatic, except for employers.", "cancel work");
 		popularity += 20;
 		infRate -= 5000;
-	} else if (command == "ban pets") {
-		display("All pets are banned and put in shelters. However, most of them never were able to carry COVID-19 anyway", "ban pets");
-		popularity -= 20;
+	} else if (command.includes("ban pets")) {
+		display("All pets are banned and put in shelters, devastating their owners. However, most of them never were able to carry COVID-19 anyway", "ban pets");
+		popularity -= 50;
+	} else if (command.includes("wear masks")) {
+		display("Everyone is required to wear masks in public.")
+		infRate -= 500;
+	} else if (command.includes("vaccine") || command.includes("develop vaccine")) {
+		display("The vaccine won't be here soon, but your efforts put people's faith in you.", "make vaccine");
+		popularity += 20;
+	} else if (command.includes("study virus") || command.includes("research virus")) {
+		display("You've ordered the virus to be studied. This doesn't slow infection, but your good decisions don't go unnoticed.", "research");
+		popularity += 10;
+	} else if (command.includes("close stores")) {
+		display("Grocery stored are shuttered globally. How will people get food now?", "close stores");
+		popularity -= 70;
+		infRate -= 3000;
+	} else if (command.includes("quarantine")) {
+		display("People are forced to stay in their homes except in case of absolute emergency.", "quarantine");
+		popularity -= 10;
+		infRate -= 3000;
+	} else if (command.includes("close airport")) {
+		display("All civilian airports are closed everywhere.", "close airports");
+		popularity += 5;
+		infRate -= 1000;
+	} else if (command.includes("build hospitals")) {
+		display("WHO money is used to build hospitals around the globe. This costs quite a bit of money, but helps treat patients well.");
+		infRate -= 1000;
+		popularity += 10;
+	} else if (command.includes("ask for money") || command.includes("ask for donations")) {
+		display("You ask the world to donate to the WHO to help with the virus. Most people kindly oblige.", "ask for money");
+		popularity += 10;
+	} else if (command.includes("step down") || command.includes("resign") || command.includes("quit")) {
+		window.location.href = 'lost.html';
+	} else if (command.includes("deport")) {
+		display("You deported everyone who was diagnosed. They now live in Antarctica?", "deport")
+		popularity -= 70;
+	} else if (command.includes("hand sanitizer")) {
+		display("Using hands sanitizer is now required every 15 minutes.");
+		popularity += 5;
+		infRate -= 500;
+	}
+		else {
+		display("Sorry boss, we can't do that...");
 	}
 	console.log(commandsused);
+	if (popularity < 0) {
+		popularity = 0; // makes sure no negatives get put into the chart
+	}
+	if (infRate < 0) {
+		infRate = 0;
+		window.location.href="won.html"
+	}
+	if (inf < 0) {
+		inf = 0;
+	}
 	drawChart(); // updates the charts after the values change
 }
 
 // command ideas:
-// wear masks
+// 
 // 
 // 
 // 
