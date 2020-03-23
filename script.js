@@ -3,6 +3,7 @@ var percent = Math.round((Math.floor(Math.random() * 10) + 4));
 var inf = Math.round((percent / 100) * pop);
 var infRate = 10000; // people infected per day
 var popularity = 85;
+var day = 0;
 
 var news1 = ["The President of the United States", "The Prime Minister of the UK", "Kim Jong Un", "The President of China", "The Sultan of Oman", "Former President Barack Obama", "Linus Torvalds", "Boris Johnson", "Vladimir Putin", "CEO of China", "Greenland", "El Chapo", "Wyoming"]
 var news2 = ["lives in Zanzibar now", "is diagnosed with COVID-19", "dies", "literally just sits there", "closes their own car door", "bans COVID-19", "bans old people", "closes airports", "digs a mass grave", "has yet to see a case of COVID-19", "literally does not exist anymore", "closes all public buildings"]
@@ -118,12 +119,19 @@ function reset() {
 
 function display(message, command) {
 	document.getElementById("typing").innerHTML = message;
-	
 	commandsused.push(command);
-	// console.log(commandsused);
 	setTimeout(reset, 5000);
-	console.log("pop ", popularity);
-	
+
+	if (popularity < 0) {
+		popularity = 0; // makes sure no negatives get put into the chart
+	}
+	if (inf < 0) {
+		inf = 0;
+	}
+	if (infRate < 0) {
+		infRate = 0;
+		window.location.href="won.html"
+	}
 }
 
 
@@ -132,11 +140,14 @@ function sendCommand() {
 	document.getElementById("prompt").value = '';
 	if (Math.random() > 0.5) { // advances the day by 1 every so often
 		day += 1;
-		// news section
 		reset();
-		display("BREAKING NEWS: "+news1[Math.floor(Math.random * 14)]+" "+news2[Math.floor(Math.random * 14)]);
 		console.log("begin day ", day);
 		inf += infRate;
+	}
+	if (Math.random() > 0.4) {
+		var news = ("BREAKING NEWS: "+news1[Math.floor(Math.random() * news1.length)]+" "+news2[Math.floor(Math.random() * news2.length)])
+		console.log(news);
+		display(news);
 	}
 	prob = popularity / 70 // gives the player a chance of being voted out only if their popularity is less than 50%
 	if (Math.random() > prob) { // loses the game if they get voted out
@@ -145,10 +156,6 @@ function sendCommand() {
 	if (pop - inf < 1) {
 		document.getElementById("piechart").style.opacity = 0;
 		window.location.href = "infected.html";
-	}
-	if (infRate < 5) {
-		console.log("game won");
-		window.location.href = 'won.html'; // wins the game
 	}
 	if (commandsused.includes(command) && command != "help") { // prevents commands from beings used twice
 		display("you already said to do that, silly!");
@@ -178,7 +185,7 @@ function sendCommand() {
 		display("All pets are banned and put in shelters, devastating their owners. However, most of them never were able to carry COVID-19 anyway", "ban pets");
 		popularity -= 50;
 	} else if (command.includes("wear masks")) {
-		display("Everyone is required to wear masks in public.")
+		display("Everyone is required to wear masks in public.", "wear masks")
 		infRate -= 500;
 	} else if (command.includes("vaccine") || command.includes("develop vaccine")) {
 		display("The vaccine won't be here soon, but your efforts put people's faith in you.", "make vaccine");
@@ -225,7 +232,7 @@ function sendCommand() {
 	} else if (command.includes("ban cars") || command.includes("ban driving") || command.includes("close roads")) {
 		display("All roads are closed and cars are not allowed to be operated.", "close roads");
 		popularity -= 30;
-		infrate -= 2000;
+		infRate -= 2000;
 	} else if (command.includes("ban virus")) {
 		display("You banned COVID-19 from the world.");
 		popularity = 100;
@@ -234,16 +241,7 @@ function sendCommand() {
 		display("Sorry boss, we can't do that...");
 	}
 	console.log(commandsused);
-	if (popularity < 0) {
-		popularity = 0; // makes sure no negatives get put into the chart
-	}
-	if (infRate < 0) {
-		infRate = 0;
-		window.location.href="won.html"
-	}
-	if (inf < 0) {
-		inf = 0;
-	}
+	
 	drawChart(); // updates the charts after the values change
 }
 
